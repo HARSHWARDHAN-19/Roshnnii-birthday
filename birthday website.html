@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<title>Roshnnii — Birthday Surprise</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<style>
+:root{ --pink:#ff4da6; --pink2:#ff9ec9; --rose:#ffeef4; --ink:#2f1a1a; }
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:'Times New Roman',serif;-webkit-font-smoothing:antialiased;overflow:hidden;}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;opacity:0;pointer-events:none;transition:opacity .35s ease}
+.screen.active{opacity:1;pointer-events:auto}
+
+/* Page 1 */
+#page1{background:linear-gradient(180deg,#150616,#210818,#2c0a16);color:#fff;text-align:center}
+.birthday-image {
+  width: 160px;
+  height: 160px;
+  margin-bottom: 24px;
+  border-radius: 24px;
+  box-shadow: 0 14px 34px rgba(0,0,0,.45);
+  object-fit: cover;
+}
+.name{font-family:'Pacifico',cursive;font-size:34px}
+#startBtn{margin-top:0;padding:12px 26px;border:none;border-radius:40px;background:linear-gradient(90deg,#ff78b4,#ff4da6);color:#fff;font-weight:700;font-size:17px;box-shadow:0 0 16px rgba(255,77,166,.65), 0 0 32px rgba(255,158,201,.45);animation:glow 1.6s ease-in-out infinite}
+@keyframes glow{0%{box-shadow:0 0 10px rgba(255,77,166,.6), 0 0 0 rgba(255,158,201,0)}50%{box-shadow:0 0 18px rgba(255,77,166,.9), 0 0 28px rgba(255,158,201,.5)}100%{box-shadow:0 0 10px rgba(255,77,166,.6), 0 0 0 rgba(255,158,201,0)}}
+#countdown{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font-size:88px;font-family:'Pacifico',cursive;color:#ff4da6;opacity:0;pointer-events:none;transition:opacity .2s;z-index:5}
+
+/* Page 2 */
+#page2{background:#fff0f6;color:var(--ink);padding-top:24px}
+.decorate-top{position:absolute;top:0;left:0;right:0;height:140px;pointer-events:none}
+/* pastel balloons */
+.balloon{position:absolute;top:28px;width:98px;height:126px;border-radius:50% 50% 45% 45%/60% 60% 40% 40%;background:linear-gradient(180deg,#ffe6f2,#ffbdd7);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+.balloon:after{content:'';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%) scale(1.4);width:2px;height:22px;background:#e2b0c5}
+.balloon.b1{left:6%} .balloon.b2{left:18%; background:linear-gradient(180deg,#fff6fa,#ffd1e6)} .balloon.b3{left:76%} .balloon.b4{left:88%; background:linear-gradient(180deg,#ffeaf4,#ffc6dc)}
+/* hanging banner */
+.hb-banner{position:absolute;top:68px;left:50%;transform:translateX(-50%) scale(1.4);font-weight:800;letter-spacing:3px;color:#d4af37;text-shadow:0 0 8px rgba(212,175,55,.85),0 0 14px rgba(255,220,120,.55)}
+.hb-banner .curve{display:inline-block;transform:rotate(-2deg)}
+
+.stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:10px}
+.cake-img{width:84vw;max-width:500px;border-radius:20px;box-shadow:0 18px 40px rgba(0,0,0,.12)}
+/* candles overlay */
+/*.candles{position:absolute;top:10%;left:50%;transform:translateX(-50%) scale(1.4);display:flex;gap:26px;pointer-events:none}
+.candle{width:12px;height:31px;background:linear-gradient(180deg,#fff,#ffe8d9);border-radius:3px;position:relative;box-shadow:0 6px 12px rgba(0,0,0,.12)}
+.flame{position:absolute;left:50%;top:-14px;width:12px;height:16px;transform:translateX(-50%) scale(1.4) scale(.2);opacity:0;border-radius:50% 50% 40% 40%;background:radial-gradient(circle at 50% 30%, #fff5d6, #ffd166 60%, rgba(255,120,0,.6) 100%);filter:blur(.4px);box-shadow:0 8px 22px rgba(255,150,40,.45)}
+*/
+.controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.btn{padding:10px 18px;border:none;border-radius:14px;font-weight:700;box-shadow:0 6px 16px rgba(0,0,0,.08)}
+.btn.light{background:linear-gradient(90deg,#ffd0a8,#c68b6b);color:#3b1b28}
+.btn.next{background:#3b1b28;color:#fff}
+.msgbox{width:88vw;max-width:580px;background:var(--rose);border:6px solid var(--pink2);border-radius:22px;box-shadow:0 10px 26px rgba(0,0,0,.15);padding:16px 18px;margin-top:12px;opacity:0;transform:translateY(6px);transition:all .45s}
+.msgbox .txt{text-align:left;line-height:1.45}
+#confetti{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .5s}
+
+/* Page 3 */
+#page3{background:#ffe9f3;color:#3b1822;text-align:center;padding:20px}
+.final-photo{width:94vw;max-width:580px;border-radius:22px;box-shadow:0 12px 30px rgba(0,0,0,.25);position:relative;z-index:2}
+.heart{position:fixed;bottom:0;font-size:34px;color:#ff76b6;opacity:0;animation:float 4s linear infinite;z-index:1}
+@keyframes float{0%{transform:translateY(40px) scale(.7);opacity:0}20%{opacity:1}100%{transform:translateY(-260px) scale(1.25);opacity:0}}
+
+/* Added responsive rules */
+@media (min-width: 768px) {
+  .screen {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  img, .cake-img, .final-photo {
+    width: 60% !important;
+    height: auto !important;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 -->
+<section id="page1" class="screen active">
+  <img src="images/Picsart_25-11-09_00-31-45-611.jpg" alt="Birthday Image" class="birthday-image">
+  <button id="startBtn">🎁 Start the surprise</button>
+</section>
+
+<div id="countdown">3</div>
+
+<!-- PAGE 2 -->
+<section id="page2" class="screen">
+  <div class="decorate-top">
+    <div class="balloon b1"></div>
+    <div class="balloon b2"></div>
+    <div class="balloon b3"></div>
+    <div class="balloon b4"></div>
+    <div class="hb-banner">
+      <span class="curve">HAPPY BIRTHDAY</span>
+    </div>
+  </div>
+
+  <div class="stage">
+     <!--<img class="cake-img" src=""/>
+   <div class="candles">
+      <div class="candle"><div class="flame"></div></div>
+      <div class="candle"><div class="flame"></div></div>
+      <div class="candle"><div class="flame"></div></div>
+    </div>-->
+  </div>
+
+  <div class="controls">
+    <button class="btn light" id="decorateBtn" aria-label="Decorate the cake">🎂 Decorate the cake</button>
+    <button class="btn light" id="lightBtn" aria-label="Light candles">💌</button>
+    <button class="btn next" id="nextBtn">Next</button>
+  </div>
+
+  <div class="msgbox" id="messageBox">
+    <img src="images/Picsart_25-11-09_00-05-33-087.png" alt="messageBox" srcset="messagebox">
+   <!-- <div class="txt">
+      <strong >Happyyie B'dayy “Thangoo” 🫶🏻🧚🏻‍♀️🎀<br></strong>
+      <strong>Wishing you the sweetest birthday, Roshnnii.  
+      You deserve all the love, happiness, and magic today 😌🌟  
+      I love youu and it's only youu 💗</strong>
+    </div>-->
+  </div>
+
+  <canvas id="confetti"></canvas>
+</section>
+
+<!-- PAGE 3 -->
+<section id="page3" class="screen">
+  <img class="final-photo" src="images/Picsart_25-11-08_19-44-01-366.jpg"/>
+</section>
+<script>
+let page1 = document.getElementById("page1");
+let page2 = document.getElementById("page2");
+let page3 = document.getElementById("page3");
+let countdown = document.getElementById("countdown");
+let startBtn = document.getElementById("startBtn");
+let lightBtn = document.getElementById("lightBtn");
+let nextBtn = document.getElementById("nextBtn");
+let messageBox = document.getElementById("messageBox");
+let confettiCanvas = document.getElementById("confetti");
+let confettiCtx = confettiCanvas.getContext("2d");
+
+confettiCanvas.width = window.innerWidth;
+confettiCanvas.height = window.innerHeight;
+
+let confettiPieces = [];
+const confettiCount = 120;
+
+function createConfetti() {
+  for (let i = 0; i < confettiCount; i++) {
+    confettiPieces.push({
+      x: Math.random() * confettiCanvas.width,
+      y: Math.random() * confettiCanvas.height - confettiCanvas.height,
+      w: 8,
+      h: 14,
+      c: `hsl(${Math.random() * 360}, 100%, 75%)`,
+      s: Math.random() * 3 + 2,
+      a: Math.random() * 360,
+      r: Math.random() * 0.1
+    });
+  }
+}
+
+function drawConfetti() {
+  confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+  confettiPieces.forEach(p => {
+    confettiCtx.fillStyle = p.c;
+    confettiCtx.save();
+    confettiCtx.translate(p.x, p.y);
+    confettiCtx.rotate(p.r * p.a);
+    confettiCtx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+    confettiCtx.restore();
+    p.y += p.s;
+    if (p.y > confettiCanvas.height) p.y = -20;
+  });
+  requestAnimationFrame(drawConfetti);
+}
+
+startBtn.addEventListener("click", () => {
+  countdown.style.opacity = 1;
+  let num = 3;
+  countdown.innerText = num;
+
+  let timer = setInterval(() => {
+    num--;
+    countdown.innerText = num;
+    if (num === 0) {
+      clearInterval(timer);
+      countdown.style.opacity = 0;
+      page1.classList.remove("active");
+      page2.classList.add("active");
+    }
+  }, 900);
+});
+
+lightBtn.addEventListener("click", () => {
+  document.querySelectorAll(".flame").forEach(f => {
+    f.style.opacity = "1";
+    f.style.transform = "translateX(-50%) scale(1.4) scale(1)";
+  });
+
+  messageBox.style.opacity = 1;
+  messageBox.style.transform = "translateY(0)";
+  confettiCanvas.style.opacity = 1;
+
+  if (confettiPieces.length === 0) {
+    createConfetti();
+    drawConfetti();
+  }
+});
+
+nextBtn.addEventListener("click", () => {
+  page2.classList.remove("active");
+  page3.classList.add("active");
+
+  setInterval(() => {
+    let heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerText = "💗";
+    heart.style.left = Math.random() * 80 + "vw";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 4000);
+  }, 500);
+});
+</script>
+
+</body>
+</html>
